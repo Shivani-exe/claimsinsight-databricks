@@ -1,9 +1,0 @@
-{
-  "started_utc": "2026-11-15T20:30:49.546902+00:00",
-  "finished_utc": "2026-11-15T20:31:16.302414+00:00",
-  "execution": "Databricks SQL Statement Execution API",
-  "notebook_sha256": "1572147334b98a4f79bd6bf136ee2bf07fd5627bd01af09b47118304b2079a2d",
-  "checks": 240,
-  "passed": 240,
-  "statement_count": 27
-}
