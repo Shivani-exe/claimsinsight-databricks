@@ -1,0 +1,23 @@
+# These checks do not connect to Databricks or validate workspace tables.
+name: Offline Python checks
+on:
+  push:
+  pull_request:
+
+# CI needs read access only; it does not publish or deploy anything.
+permissions:
+  contents: read
+
+# Use the standard library so CI does not require Spark, Java, or credentials.
+jobs:
+  offline-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile Python sources
+        run: python -m compileall -q notebooks scripts tests
+      - name: Test validation and failure handling
+        run: python -m unittest discover -s tests -v

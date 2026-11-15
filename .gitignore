@@ -1,0 +1,37 @@
+# Keep local credentials and machine configuration out of Git.
+.env
+.env.*
+!.env.example
+.databrickscfg
+.databricks/
+.codex/
+*token-cache*
+*.pem
+*.key
+credentials*
+secrets*
+
+# Keep source datasets and extracts in Unity Catalog rather than in the repository.
+*.csv
+*.csv.gz
+*.parquet
+*.zip
+*.dbc
+raw_files/
+data/
+
+# Ignore local execution and editor artifacts.
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+work/
+live_test_results.local.json
+*.manifest.local.json
