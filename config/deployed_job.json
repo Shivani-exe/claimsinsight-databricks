@@ -1,0 +1,101 @@
+{
+  "created_time": 1795757770659,
+  "creator_user_name": "shivaninarang20@gmail.com",
+  "job_id": 352752500046244,
+  "run_as_user_name": "shivaninarang20@gmail.com",
+  "settings": {
+    "email_notifications": {
+      "no_alert_for_skipped_runs": false
+    },
+    "format": "MULTI_TASK",
+    "max_concurrent_runs": 1,
+    "name": "ClaimsInsight_CMS_MVP2_Pipeline",
+    "performance_target": "PERFORMANCE_OPTIMIZED",
+    "queue": {
+      "enabled": true
+    },
+    "tasks": [
+      {
+        "disabled": false,
+        "email_notifications": {},
+        "notebook_task": {
+          "notebook_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_16_CMS_Job_Ingest",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "ingest_claims",
+        "timeout_seconds": 0,
+        "webhook_notifications": {}
+      },
+      {
+        "depends_on": [
+          {
+            "task_key": "ingest_claims"
+          }
+        ],
+        "disabled": false,
+        "email_notifications": {},
+        "notebook_task": {
+          "notebook_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_17_CMS_Job_Stage_Events",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "stage_events",
+        "timeout_seconds": 0,
+        "webhook_notifications": {}
+      },
+      {
+        "depends_on": [
+          {
+            "task_key": "stage_events"
+          }
+        ],
+        "disabled": false,
+        "email_notifications": {},
+        "notebook_task": {
+          "notebook_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_18_CMS_Job_Classify_Events",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "classify_events",
+        "timeout_seconds": 0,
+        "webhook_notifications": {}
+      },
+      {
+        "depends_on": [
+          {
+            "task_key": "classify_events"
+          }
+        ],
+        "disabled": false,
+        "email_notifications": {},
+        "notebook_task": {
+          "notebook_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_19_CMS_Job_Process_Claims",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "process_claims",
+        "timeout_seconds": 0,
+        "webhook_notifications": {}
+      },
+      {
+        "depends_on": [
+          {
+            "task_key": "process_claims"
+          }
+        ],
+        "disabled": false,
+        "email_notifications": {},
+        "notebook_task": {
+          "notebook_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_20_CMS_Job_Audit_Claims",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "ausit_claims",
+        "timeout_seconds": 0
+      }
+    ],
+    "timeout_seconds": 0,
+    "webhook_notifications": {}
+  }
+}

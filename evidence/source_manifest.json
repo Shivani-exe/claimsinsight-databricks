@@ -1,0 +1,42 @@
+{
+  "captured_at_utc": "2026-11-27T05:52:43.022705+00:00",
+  "normalization": "UTF-8, LF line endings; source statements unchanged",
+  "notebooks": [
+    {
+      "repository_path": "notebooks/01_CMS_Auto_Loader.py",
+      "workspace_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_16_CMS_Job_Ingest",
+      "sha256_utf8_lf": "e04aa93f5d808c4e606adfe952296316f96a4d51182e11436f774e6e95ad107e",
+      "source_modified": false
+    },
+    {
+      "repository_path": "notebooks/02_CMS_Stage_Events.py",
+      "workspace_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_17_CMS_Job_Stage_Events",
+      "sha256_utf8_lf": "7b8d9a782d5c751172ef603b79de1e6430722ab48ed916126093a26ec0da90c8",
+      "source_modified": false
+    },
+    {
+      "repository_path": "notebooks/03_CMS_Classify_Events.py",
+      "workspace_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_18_CMS_Job_Classify_Events",
+      "sha256_utf8_lf": "f116e02f748c89a6be42af61bee9fda7b39e1173c694ef265baa15e9f1d3ac1b",
+      "source_modified": false
+    },
+    {
+      "repository_path": "notebooks/04_CMS_Process_Claims.py",
+      "workspace_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_19_CMS_Job_Process_Claims",
+      "sha256_utf8_lf": "0b5b10df29c8788917903dbb1e5dcbf32cf6998f3279065d381f060a2ed6fc7a",
+      "source_modified": false
+    },
+    {
+      "repository_path": "notebooks/05_CMS_Audit_Claims.py",
+      "workspace_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_20_CMS_Job_Audit_Claims",
+      "sha256_utf8_lf": "ce30605049b54cc258a04dbc95009c9c473d39debf1fc56d3fc29a6b55b14888",
+      "source_modified": false
+    },
+    {
+      "repository_path": "setup/00_CMS_Setup_and_Batches.py",
+      "workspace_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_15_CMS_Real_Data",
+      "sha256_utf8_lf": "f8ef77035bb62c86a60977f3592632c532b6c5aa0534ba518f7d7513caee2a3d",
+      "source_modified": false
+    }
+  ]
+}
