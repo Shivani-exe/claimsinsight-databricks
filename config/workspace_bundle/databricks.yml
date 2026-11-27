@@ -1,0 +1,55 @@
+
+# ClaimsInsight CMS MVP2 — Lakeflow Jobs DAG
+
+bundle:
+  name: claimsinsight_cms_mvp2
+
+variables:
+  notebook_folder:
+    default: /Workspace/Users/shivaninarang20@gmail.com
+
+resources:
+  jobs:
+    cms_claims_pipeline:
+      name: ClaimsInsight_CMS_MVP2_Pipeline
+      max_concurrent_runs: 1
+
+      tasks:
+        - task_key: ingest_claims
+          notebook_task:
+            notebook_path: ${var.notebook_folder}/MVP2_CMS_Job_Ingest
+            source: WORKSPACE
+
+        - task_key: stage_events
+          depends_on:
+            - task_key: ingest_claims
+          notebook_task:
+            notebook_path: ${var.notebook_folder}/MVP2_CMS_Job_Stage_Events
+            source: WORKSPACE
+
+        - task_key: classify_events
+          depends_on:
+            - task_key: stage_events
+          notebook_task:
+            notebook_path: ${var.notebook_folder}/MVP2_CMS_Job_Classify_Events
+            source: WORKSPACE
+
+        - task_key: process_claims
+          depends_on:
+            - task_key: classify_events
+          notebook_task:
+            notebook_path: ${var.notebook_folder}/MVP2_CMS_Job_Process_Claims
+            source: WORKSPACE
+
+        - task_key: audit_claims
+          depends_on:
+            - task_key: process_claims
+          notebook_task:
+            notebook_path: ${var.notebook_folder}/MVP2_CMS_Job_Audit_Claims
+            source: WORKSPACE
+  
+  
+targets:
+  dev:
+    mode: development
+    default: true

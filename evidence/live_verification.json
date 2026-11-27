@@ -1,0 +1,257 @@
+{
+  "captured_at_utc": "2026-11-27T05:51:29.525623+00:00",
+  "namespace": "workspace.claimsinsight_cms_mvp2",
+  "read_only": true,
+  "queries": {
+    "table_counts": {
+      "sql": "SELECT 'bronze_claim_events_mvp2' AS table_name, COUNT(*) AS rows FROM workspace.claimsinsight_cms_mvp2.bronze_claim_events_mvp2 UNION ALL SELECT 'mvp2_processing_queue' AS table_name, COUNT(*) AS rows FROM workspace.claimsinsight_cms_mvp2.mvp2_processing_queue UNION ALL SELECT 'mvp2_processing_decisions' AS table_name, COUNT(*) AS rows FROM workspace.claimsinsight_cms_mvp2.mvp2_processing_decisions UNION ALL SELECT 'silver_claims_current_mvp2' AS table_name, COUNT(*) AS rows FROM workspace.claimsinsight_cms_mvp2.silver_claims_current_mvp2 UNION ALL SELECT 'quarantine_claim_events_mvp2' AS table_name, COUNT(*) AS rows FROM workspace.claimsinsight_cms_mvp2.quarantine_claim_events_mvp2 UNION ALL SELECT 'mvp2_event_processing_ledger' AS table_name, COUNT(*) AS rows FROM workspace.claimsinsight_cms_mvp2.mvp2_event_processing_ledger UNION ALL SELECT 'mvp2_batch_audit' AS table_name, COUNT(*) AS rows FROM workspace.claimsinsight_cms_mvp2.mvp2_batch_audit",
+      "rows": [
+        {
+          "table_name": "bronze_claim_events_mvp2",
+          "rows": "38921"
+        },
+        {
+          "table_name": "mvp2_processing_queue",
+          "rows": "38921"
+        },
+        {
+          "table_name": "mvp2_processing_decisions",
+          "rows": "38921"
+        },
+        {
+          "table_name": "silver_claims_current_mvp2",
+          "rows": "38803"
+        },
+        {
+          "table_name": "quarantine_claim_events_mvp2",
+          "rows": "8"
+        },
+        {
+          "table_name": "mvp2_event_processing_ledger",
+          "rows": "38921"
+        },
+        {
+          "table_name": "mvp2_batch_audit",
+          "rows": "2"
+        }
+      ]
+    },
+    "bronze_batches": {
+      "sql": "SELECT REGEXP_EXTRACT(source_file, '[^/]+$', 0) AS file_name, COUNT(*) AS incoming_count, COUNT(DISTINCT event_id) AS distinct_event_ids FROM workspace.claimsinsight_cms_mvp2.bronze_claim_events_mvp2 GROUP BY source_file ORDER BY file_name",
+      "rows": [
+        {
+          "file_name": "cms_batch_001.csv",
+          "incoming_count": "25231",
+          "distinct_event_ids": "25231"
+        },
+        {
+          "file_name": "cms_batch_002.csv",
+          "incoming_count": "13690",
+          "distinct_event_ids": "13690"
+        }
+      ]
+    },
+    "decision_outcomes": {
+      "sql": "SELECT REGEXP_EXTRACT(source_file, '[^/]+$', 0) AS file_name, processing_status, COUNT(*) AS rows FROM workspace.claimsinsight_cms_mvp2.mvp2_processing_decisions GROUP BY source_file,processing_status ORDER BY file_name,processing_status",
+      "rows": [
+        {
+          "file_name": "cms_batch_001.csv",
+          "processing_status": "READY_FOR_MERGE",
+          "rows": "25231"
+        },
+        {
+          "file_name": "cms_batch_002.csv",
+          "processing_status": "IGNORE_DUPLICATE_EVENT",
+          "rows": "100"
+        },
+        {
+          "file_name": "cms_batch_002.csv",
+          "processing_status": "READY_FOR_MERGE",
+          "rows": "13582"
+        },
+        {
+          "file_name": "cms_batch_002.csv",
+          "processing_status": "REJECT_INVALID_PAYMENT",
+          "rows": "3"
+        },
+        {
+          "file_name": "cms_batch_002.csv",
+          "processing_status": "REJECT_MISSING_ID",
+          "rows": "5"
+        }
+      ]
+    },
+    "ledger_outcomes": {
+      "sql": "SELECT REGEXP_EXTRACT(source_file, '[^/]+$', 0) AS file_name, processing_status, COUNT(*) AS rows FROM workspace.claimsinsight_cms_mvp2.mvp2_event_processing_ledger GROUP BY source_file,processing_status ORDER BY file_name,processing_status",
+      "rows": [
+        {
+          "file_name": "cms_batch_001.csv",
+          "processing_status": "MERGED",
+          "rows": "25231"
+        },
+        {
+          "file_name": "cms_batch_002.csv",
+          "processing_status": "IGNORED_DUPLICATE",
+          "rows": "100"
+        },
+        {
+          "file_name": "cms_batch_002.csv",
+          "processing_status": "MERGED",
+          "rows": "13582"
+        },
+        {
+          "file_name": "cms_batch_002.csv",
+          "processing_status": "QUARANTINED",
+          "rows": "8"
+        }
+      ]
+    },
+    "quarantine_reasons": {
+      "sql": "SELECT rejection_reason, COUNT(*) AS rows, COUNT_IF(paid_amount='NOT_A_NUMBER') AS invalid_payment_preserved FROM workspace.claimsinsight_cms_mvp2.quarantine_claim_events_mvp2 GROUP BY rejection_reason ORDER BY rejection_reason",
+      "rows": [
+        {
+          "rejection_reason": "REJECT_INVALID_PAYMENT",
+          "rows": "3",
+          "invalid_payment_preserved": "3"
+        },
+        {
+          "rejection_reason": "REJECT_MISSING_ID",
+          "rows": "5",
+          "invalid_payment_preserved": "0"
+        }
+      ]
+    },
+    "silver_state": {
+      "sql": "SELECT COUNT(*) AS rows, COUNT(DISTINCT STRUCT(claim_id,segment)) AS distinct_keys, COUNT_IF(event_version=2 AND operation='UPDATE') AS version2_corrections, COUNT_IF(paid_amount IS NULL) AS missing_payments, COUNT_IF(paid_amount < 0) AS negative_payments, COUNT_IF(paid_amount=0) AS zero_payments, SUM(paid_amount) AS payment_total FROM workspace.claimsinsight_cms_mvp2.silver_claims_current_mvp2",
+      "rows": [
+        {
+          "rows": "38803",
+          "distinct_keys": "38803",
+          "version2_corrections": "10",
+          "missing_payments": "0",
+          "negative_payments": "33",
+          "zero_payments": "1103",
+          "payment_total": "377480600.00"
+        }
+      ]
+    },
+    "audit_rows": {
+      "sql": "SELECT batch_name,incoming_count,merged_count,quarantined_count,ignored_count,silver_row_count,silver_payment_total,audit_status,CAST(audited_at AS STRING) AS audited_at FROM workspace.claimsinsight_cms_mvp2.mvp2_batch_audit ORDER BY batch_name",
+      "rows": [
+        {
+          "batch_name": "cms_batch_001.csv",
+          "incoming_count": "25231",
+          "merged_count": "25231",
+          "quarantined_count": "0",
+          "ignored_count": "0",
+          "silver_row_count": "25231",
+          "silver_payment_total": "244810270.00",
+          "audit_status": "RECONCILED",
+          "audited_at": "2026-11-27 04:50:49.686911"
+        },
+        {
+          "batch_name": "cms_batch_002.csv",
+          "incoming_count": "13690",
+          "merged_count": "13582",
+          "quarantined_count": "8",
+          "ignored_count": "100",
+          "silver_row_count": "38803",
+          "silver_payment_total": "377480600.00",
+          "audit_status": "RECONCILED",
+          "audited_at": "2026-11-27 05:44:40.220121"
+        }
+      ]
+    },
+    "delivery_grains": {
+      "sql": "SELECT 'bronze_claim_events_mvp2' AS table_name, COUNT(*)-COUNT(DISTINCT STRUCT(source_file,event_id)) AS repeated_delivery_keys, COUNT_IF(source_file IS NULL OR event_id IS NULL OR TRIM(event_id)='') AS missing_delivery_keys FROM workspace.claimsinsight_cms_mvp2.bronze_claim_events_mvp2 UNION ALL SELECT 'mvp2_processing_queue' AS table_name, COUNT(*)-COUNT(DISTINCT STRUCT(source_file,event_id)) AS repeated_delivery_keys, COUNT_IF(source_file IS NULL OR event_id IS NULL OR TRIM(event_id)='') AS missing_delivery_keys FROM workspace.claimsinsight_cms_mvp2.mvp2_processing_queue UNION ALL SELECT 'mvp2_processing_decisions' AS table_name, COUNT(*)-COUNT(DISTINCT STRUCT(source_file,event_id)) AS repeated_delivery_keys, COUNT_IF(source_file IS NULL OR event_id IS NULL OR TRIM(event_id)='') AS missing_delivery_keys FROM workspace.claimsinsight_cms_mvp2.mvp2_processing_decisions UNION ALL SELECT 'mvp2_event_processing_ledger' AS table_name, COUNT(*)-COUNT(DISTINCT STRUCT(source_file,event_id)) AS repeated_delivery_keys, COUNT_IF(source_file IS NULL OR event_id IS NULL OR TRIM(event_id)='') AS missing_delivery_keys FROM workspace.claimsinsight_cms_mvp2.mvp2_event_processing_ledger UNION ALL SELECT 'quarantine_claim_events_mvp2' AS table_name, COUNT(*)-COUNT(DISTINCT STRUCT(source_file,event_id)) AS repeated_delivery_keys, COUNT_IF(source_file IS NULL OR event_id IS NULL OR TRIM(event_id)='') AS missing_delivery_keys FROM workspace.claimsinsight_cms_mvp2.quarantine_claim_events_mvp2",
+      "rows": [
+        {
+          "table_name": "bronze_claim_events_mvp2",
+          "repeated_delivery_keys": "0",
+          "missing_delivery_keys": "0"
+        },
+        {
+          "table_name": "mvp2_processing_queue",
+          "repeated_delivery_keys": "0",
+          "missing_delivery_keys": "0"
+        },
+        {
+          "table_name": "mvp2_processing_decisions",
+          "repeated_delivery_keys": "0",
+          "missing_delivery_keys": "0"
+        },
+        {
+          "table_name": "mvp2_event_processing_ledger",
+          "repeated_delivery_keys": "0",
+          "missing_delivery_keys": "0"
+        },
+        {
+          "table_name": "quarantine_claim_events_mvp2",
+          "repeated_delivery_keys": "0",
+          "missing_delivery_keys": "0"
+        }
+      ]
+    },
+    "backlogs": {
+      "sql": "SELECT (SELECT COUNT(*) FROM workspace.claimsinsight_cms_mvp2.mvp2_processing_queue LEFT ANTI JOIN workspace.claimsinsight_cms_mvp2.mvp2_processing_decisions USING(source_file,event_id)) AS unclassified_queue, (SELECT COUNT(*) FROM workspace.claimsinsight_cms_mvp2.mvp2_processing_decisions LEFT ANTI JOIN workspace.claimsinsight_cms_mvp2.mvp2_event_processing_ledger USING(source_file,event_id)) AS unfinished_decisions, (SELECT COUNT(*) FROM workspace.claimsinsight_cms_mvp2.bronze_claim_events_mvp2 LEFT ANTI JOIN workspace.claimsinsight_cms_mvp2.mvp2_processing_queue USING(source_file,event_id)) AS unstaged_bronze",
+      "rows": [
+        {
+          "unclassified_queue": "0",
+          "unfinished_decisions": "0",
+          "unstaged_bronze": "0"
+        }
+      ]
+    },
+    "ledger_reconciliation": {
+      "sql": "SELECT COUNT(*) AS mismatches FROM workspace.claimsinsight_cms_mvp2.mvp2_processing_decisions d LEFT JOIN workspace.claimsinsight_cms_mvp2.mvp2_event_processing_ledger l USING(source_file,event_id) WHERE NOT (l.processing_status <=> CASE WHEN d.processing_status='READY_FOR_MERGE' THEN 'MERGED' WHEN d.processing_status LIKE 'REJECT_%' THEN 'QUARANTINED' WHEN d.processing_status='IGNORE_DUPLICATE_EVENT' THEN 'IGNORED_DUPLICATE' ELSE d.processing_status END)",
+      "rows": [
+        {
+          "mismatches": "0"
+        }
+      ]
+    },
+    "correction_payments": {
+      "sql": "SELECT COUNT(*) AS corrections_matched_to_base, COUNT_IF(s.event_version=2 AND s.operation='UPDATE' AND s.paid_amount=TRY_CAST(b.CLM_PMT_AMT AS DECIMAL(18,2))+100) AS correct_plus_100, SUM(s.paid_amount-TRY_CAST(b.CLM_PMT_AMT AS DECIMAL(18,2))) AS net_change FROM workspace.claimsinsight_cms_mvp2.silver_claims_current_mvp2 s JOIN workspace.claimsinsight.bronze_inpatient b ON s.claim_id=b.CLM_ID AND s.segment=TRY_CAST(b.SEGMENT AS INT) WHERE s.event_id LIKE 'CMS_CORR_%'",
+      "rows": [
+        {
+          "corrections_matched_to_base": "10",
+          "correct_plus_100": "10",
+          "net_change": "1000.00"
+        }
+      ]
+    },
+    "audit_reconciliation": {
+      "sql": "WITH counts AS (SELECT REGEXP_EXTRACT(source_file,'[^/]+$',0) batch_name,COUNT(*) incoming_count,COUNT_IF(processing_status='MERGED') merged_count,COUNT_IF(processing_status='QUARANTINED') quarantined_count,COUNT_IF(processing_status NOT IN ('MERGED','QUARANTINED')) ignored_count FROM workspace.claimsinsight_cms_mvp2.mvp2_event_processing_ledger GROUP BY source_file) SELECT COUNT(*) AS mismatched_files FROM counts c FULL OUTER JOIN workspace.claimsinsight_cms_mvp2.mvp2_batch_audit a USING(batch_name) WHERE NOT(c.incoming_count <=> a.incoming_count) OR NOT(c.merged_count <=> a.merged_count) OR NOT(c.quarantined_count <=> a.quarantined_count) OR NOT(c.ignored_count <=> a.ignored_count) OR a.audit_status != 'RECONCILED'",
+      "rows": [
+        {
+          "mismatched_files": "0"
+        }
+      ]
+    },
+    "source_years": {
+      "sql": "SELECT SUBSTRING(CLM_FROM_DT,1,4) AS claim_start_year,COUNT(*) AS rows FROM workspace.claimsinsight.bronze_inpatient GROUP BY SUBSTRING(CLM_FROM_DT,1,4) ORDER BY claim_start_year",
+      "rows": [
+        {
+          "claim_start_year": null,
+          "rows": "68"
+        },
+        {
+          "claim_start_year": "2007",
+          "rows": "224"
+        },
+        {
+          "claim_start_year": "2008",
+          "rows": "27678"
+        },
+        {
+          "claim_start_year": "2009",
+          "rows": "25231"
+        },
+        {
+          "claim_start_year": "2010",
+          "rows": "13572"
+        }
+      ]
+    }
+  }
+}

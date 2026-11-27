@@ -1,0 +1,120 @@
+{
+  "job_id": 352752500046244,
+  "run_id": 935354143644293,
+  "start_time": 1795758139843,
+  "end_time": 1795758287404,
+  "state": {
+    "life_cycle_state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "state_message": "",
+    "user_cancelled_or_timedout": false
+  },
+  "run_page_url": "https://dbc-66688edb-9ace.cloud.databricks.com/?o=7474656490632794#job/352752500046244/run/935354143644293",
+  "tasks": [
+    {
+      "task_key": "stage_events",
+      "run_id": 835091141647637,
+      "start_time": 1795758183153,
+      "end_time": 1795758196510,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "notebook_task": {
+        "notebook_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_17_CMS_Job_Stage_Events",
+        "source": "WORKSPACE"
+      },
+      "depends_on": [
+        {
+          "task_key": "ingest_claims"
+        }
+      ],
+      "attempt_number": 0
+    },
+    {
+      "task_key": "ausit_claims",
+      "run_id": 764319709309276,
+      "start_time": 1795758265958,
+      "end_time": 1795758286976,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "notebook_task": {
+        "notebook_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_20_CMS_Job_Audit_Claims",
+        "source": "WORKSPACE"
+      },
+      "depends_on": [
+        {
+          "task_key": "process_claims"
+        }
+      ],
+      "attempt_number": 0
+    },
+    {
+      "task_key": "classify_events",
+      "run_id": 974281967065804,
+      "start_time": 1795758196924,
+      "end_time": 1795758226742,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "notebook_task": {
+        "notebook_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_18_CMS_Job_Classify_Events",
+        "source": "WORKSPACE"
+      },
+      "depends_on": [
+        {
+          "task_key": "stage_events"
+        }
+      ],
+      "attempt_number": 0
+    },
+    {
+      "task_key": "ingest_claims",
+      "run_id": 387801674321649,
+      "start_time": 1795758139877,
+      "end_time": 1795758182763,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "notebook_task": {
+        "notebook_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_16_CMS_Job_Ingest",
+        "source": "WORKSPACE"
+      },
+      "attempt_number": 0
+    },
+    {
+      "task_key": "process_claims",
+      "run_id": 485566147969048,
+      "start_time": 1795758227082,
+      "end_time": 1795758265642,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "notebook_task": {
+        "notebook_path": "/Workspace/Users/shivaninarang20@gmail.com/MVP2_19_CMS_Job_Process_Claims",
+        "source": "WORKSPACE"
+      },
+      "depends_on": [
+        {
+          "task_key": "classify_events"
+        }
+      ],
+      "attempt_number": 0
+    }
+  ]
+}
